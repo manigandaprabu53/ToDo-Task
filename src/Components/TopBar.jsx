@@ -9,12 +9,27 @@ import { useNavigate } from 'react-router-dom';
 
 
 function TopBar({data, setData}) {
+    console.log(data)
     let navigate = useNavigate();
     const [id,setId]=useState(0)
     // const [data, setData] = useState([]);
     const [name, setName] = useState("");
     const [des, setDes] = useState("");
     const [status, setStatus] = useState("Not Completed");
+    const [cat, setCat] = useState("all");
+    let handleFilter = (userData)=>{
+      if(cat === "Completed")
+      {
+        return userData.filter((e)=>e.status === cat)
+      }
+      else if(cat === "Not Completed")
+      {
+        return userData.filter((e)=>e.status === cat)
+      }
+      else{
+        return userData
+      }
+    }
 
     const handleClick = ()=>{
         setId(Number(id)+1);
@@ -46,10 +61,18 @@ function TopBar({data, setData}) {
                     <Form.Control className=' custom-size border border-success' type="text" placeholder="ToDo Description" onChange={(e)=>setDes(e.target.value)}/>
                     <Button variant="success" onClick={()=>handleClick()}>Add Task</Button>
                 </Stack>
+                <Form.Group className='d-flex justify-content-end mt-3 gap-2'>
+                  <Form.Label>Status:</Form.Label>
+                  <Form.Select style={{width: "30px", backgroundColor: "pink", height: "30px",}} defaultValue="All" onChange={(e)=>setCat(e.target.value)}>
+                    <option value="All">All</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Not Completed">Not Completed</option>
+                  </Form.Select>
+                </Form.Group>
             </Form>
         </div>
         <div className="Container mt-5 d-flex flex-wrap gap-3">
-            {data.length?data.map((e)=>{
+            {data.length?handleFilter(data).map((e)=>{
                 return <Card key={e.id} bg= "success" style={{minWidth: "300px", maxWidth: "500px"}}>
                 <Card.Body>
                   <Card.Text>
